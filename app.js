@@ -116,7 +116,13 @@ Tiles: ${d.tiles}
 
 <br><br>
 
-Skirting: ${d.skirting} sqft
+<b>Skirting:</b>
+${d.skirting} sqft
+
+<br><br>
+
+<b>Skirting Tiles:</b>
+${Math.ceil((d.skirting/4)+1)}
 
 <br><br>
 
