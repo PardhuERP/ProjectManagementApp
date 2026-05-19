@@ -174,4 +174,24 @@ document
 
 <b>Grout:</b> ${d.grout}
 
+<br><br>
+
+<b>False Ceiling:</b>
+${d.falseCeiling} sqft
+
+<br><br>
+
+<b>Gypsum Boards:</b>
+${d.gypsum}
+
+<br><br>
+
+<b>Paint:</b>
+${d.paint} Liters
+
+<br><br>
+
+<b>POP Bags:</b>
+${d.pop}
+
 `;
