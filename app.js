@@ -224,7 +224,28 @@ API+
 
 "&room="+room+
 
-"&type=Room"+
+let roomType=
+document.getElementById(
+"roomType"
+).value;
+
+let url=
+
+API+
+
+"?action=addRoom"+
+
+"&project=PRJ001"+
+
+"&room="+room+
+
+"&type="+roomType+
+
+"&length="+length+
+
+"&width="+width+
+
+"&height=10";
 
 "&length="+length+
 
