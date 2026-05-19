@@ -58,23 +58,30 @@ document
 
 async function calculate(){
 
-let length=
-document
-.getElementById("length")
-.value;
+let unit=
+document.getElementById(
+"unit"
+).value;
 
-let width=
-document
-.getElementById("width")
-.value;
-
-if(!length || !width){
-
-alert(
-"Please enter length and width"
+let length=parseFloat(
+document.getElementById(
+"length"
+).value
 );
 
-return;
+let width=parseFloat(
+document.getElementById(
+"width"
+).value
+);
+
+if(unit=="mm"){
+
+length=
+length/304.8;
+
+width=
+width/304.8;
 
 }
 
@@ -92,38 +99,58 @@ API+
 
 );
 
-let d=
-await r.json();
+let d=await r.json();
 
 document
-.getElementById("result")
-.innerHTML=`
+.getElementById(
+"result"
+).innerHTML=`
 
-<h3>📐 Results</h3>
+<h3>Results</h3>
 
-<b>Area:</b>
-${d.area} sqft
-
-<br><br>
-
-<b>Tiles:</b>
-${d.tiles}
+Area: ${d.area} sqft
 
 <br><br>
 
-<b>Skirting:</b>
-${d.skirting} sqft
+Tiles: ${d.tiles}
 
 <br><br>
 
-<b>Adhesive:</b>
-${d.adhesive} Bags
+Skirting: ${d.skirting} sqft
 
 <br><br>
 
-<b>Grout:</b>
-${d.grout}
+Adhesive: ${d.adhesive} Bags
+
+<br><br>
+
+Grout: ${d.grout}
 
 `;
 
 }
+
+document
+.getElementById("unit")
+.addEventListener(
+"change",
+function(){
+
+let unit=
+this.value;
+
+document
+.getElementById(
+"length"
+)
+.placeholder=
+"Length ("+unit+")";
+
+document
+.getElementById(
+"width"
+)
+.placeholder=
+"Width ("+unit+")";
+
+});
