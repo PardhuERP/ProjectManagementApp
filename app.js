@@ -142,26 +142,36 @@ Grout: ${d.grout}
 }
 
 document
-.getElementById("unit")
-.addEventListener(
-"change",
-function(){
-
-let unit=
-this.value;
-
-document
 .getElementById(
-"length"
-)
-.placeholder=
-"Length ("+unit+")";
+"result"
+).innerHTML=`
 
-document
-.getElementById(
-"width"
-)
-.placeholder=
-"Width ("+unit+")";
+<h3>📐 Results</h3>
 
-});
+<b>Area:</b> ${Number(d.area).toFixed(2)} sqft
+
+<br><br>
+
+<b>Tiles:</b> ${d.tiles}
+
+<br><br>
+
+<b>Skirting:</b> ${d.skirting} sqft
+
+<br><br>
+
+<b>Skirting Tiles:</b> ${Math.ceil((d.skirting/4)+1)}
+
+<br><br>
+
+<b>Total Tiles:</b> ${d.tiles + Math.ceil((d.skirting/4)+1)}
+
+<br><br>
+
+<b>Adhesive:</b> ${d.adhesive} Bags
+
+<br><br>
+
+<b>Grout:</b> ${d.grout}
+
+`;
