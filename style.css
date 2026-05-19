@@ -1,39 +1,46 @@
 body{
+
 background:#121212;
+
 color:white;
-font-family:Arial;
+
+font-family:Arial,sans-serif;
+
 padding:15px;
+
+margin:0;
+
 }
+
 
 .header{
+
 text-align:center;
+
 margin-bottom:20px;
+
 }
+
 
 .card{
+
 background:#1e1e1e;
+
 padding:20px;
+
 border-radius:15px;
-}
 
-button{
+margin-top:20px;
 
-width:100%;
-
-padding:15px;
-
-margin-top:10px;
-
-border:none;
-
-border-radius:10px;
-
-font-size:16px;
+box-shadow:
+0 0 10px
+rgba(255,255,255,.1);
 
 }
 
 
-input{
+input,
+select{
 
 width:100%;
 
@@ -49,9 +56,14 @@ font-size:16px;
 
 box-sizing:border-box;
 
+background:#2a2a2a;
+
+color:white;
+
 }
 
-select{
+
+button{
 
 width:100%;
 
@@ -59,32 +71,49 @@ padding:15px;
 
 margin-top:10px;
 
+border:none;
+
 border-radius:10px;
 
 font-size:16px;
 
-}
+background:#2f7cf6;
 
-.card{
+color:white;
 
-background:#1e1e1e;
+font-weight:bold;
 
-padding:20px;
-
-border-radius:15px;
-
-margin-top:20px;
-
-box-shadow:0 0 10px rgba(255,255,255,.1);
+cursor:pointer;
 
 }
+
+
+button:hover{
+
+opacity:.9;
+
+}
+
 
 p{
 
-padding:8px 0;
+padding:10px 0;
 
 margin:0;
 
-border-bottom:1px solid #333;
+border-bottom:
+1px solid #333;
+
+}
+
+
+hr{
+
+border:
+1px solid #333;
+
+margin-top:20px;
+
+margin-bottom:20px;
 
 }
