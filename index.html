@@ -13,11 +13,24 @@
 
 <div class="card">
 
-<h3>Dashboard</h3>
+<h3>Room Calculator</h3>
 
-<button onclick="openRooms()">
-Room Calculator
+<input id="room"
+placeholder="Room Name">
+
+<input id="length"
+placeholder="Length (ft)">
+
+<input id="width"
+placeholder="Width (ft)">
+
+<button onclick="calculate()">
+Calculate
 </button>
+
+<div id="result"></div>
+
+<hr>
 
 <button onclick="materials()">
 Material Status
