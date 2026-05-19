@@ -59,65 +59,48 @@ document
 async function calculate(){
 
 let unit=
-document.getElementById(
-"unit"
-).value;
+document.getElementById("unit").value;
 
 let length=parseFloat(
-document.getElementById(
-"length"
-).value
+document.getElementById("length").value
 );
 
 let width=parseFloat(
-document.getElementById(
-"width"
-).value
+document.getElementById("width").value
 );
 
 if(unit=="mm"){
 
-length=
-length/304.8;
-
-width=
-width/304.8;
+length=length/304.8;
+width=width/304.8;
 
 }
 
 let r=await fetch(
 
 API+
-
 "?action=calculate"+
-
 "&length="+length+
-
 "&width="+width+
-
 "&height=10"
 
 );
 
 let d=await r.json();
 
-document
-.getElementById(
-"result"
-).innerHTML=`
+document.getElementById("result").innerHTML=`
 
-<h3>Results</h3>
+<h3>📐 Results</h3>
 
-Area: ${d.area} sqft
+<b>Area:</b> ${Number(d.area).toFixed(2)} sqft
 
 <br><br>
 
-Tiles: ${d.tiles}
+<b>Tiles:</b> ${d.tiles}
 
 <br><br>
 
-<b>Skirting:</b>
-${d.skirting} sqft
+<b>Skirting:</b> ${d.skirting} sqft
 
 <br><br>
 
@@ -131,11 +114,33 @@ ${d.tiles + Math.ceil((d.skirting/4)+1)}
 
 <br><br>
 
-Adhesive: ${d.adhesive} Bags
+<b>Adhesive:</b>
+${d.adhesive} Bags
 
 <br><br>
 
-Grout: ${d.grout}
+<b>Grout:</b>
+${d.grout}
+
+<br><br>
+
+<b>False Ceiling:</b>
+${d.falseCeiling} sqft
+
+<br><br>
+
+<b>Gypsum Boards:</b>
+${d.gypsum}
+
+<br><br>
+
+<b>Paint:</b>
+${d.paint} Liters
+
+<br><br>
+
+<b>POP Bags:</b>
+${d.pop}
 
 `;
 
