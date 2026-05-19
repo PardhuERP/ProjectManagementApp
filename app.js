@@ -126,6 +126,11 @@ ${Math.ceil((d.skirting/4)+1)}
 
 <br><br>
 
+<b>Total Tiles:</b>
+${d.tiles + Math.ceil((d.skirting/4)+1)}
+
+<br><br>
+
 Adhesive: ${d.adhesive} Bags
 
 <br><br>
