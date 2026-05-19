@@ -48,10 +48,82 @@ alert(txt);
 
 }
 
-function openRooms(){
+async function openRooms(){
+
+document
+.getElementById("result")
+.innerHTML="";
+
+}
+
+async function calculate(){
+
+let length=
+document
+.getElementById("length")
+.value;
+
+let width=
+document
+.getElementById("width")
+.value;
+
+if(!length || !width){
 
 alert(
-"Room calculator next"
+"Please enter length and width"
 );
+
+return;
+
+}
+
+let r=await fetch(
+
+API+
+
+"?action=calculate"+
+
+"&length="+length+
+
+"&width="+width+
+
+"&height=10"
+
+);
+
+let d=
+await r.json();
+
+document
+.getElementById("result")
+.innerHTML=`
+
+<h3>📐 Results</h3>
+
+<b>Area:</b>
+${d.area} sqft
+
+<br><br>
+
+<b>Tiles:</b>
+${d.tiles}
+
+<br><br>
+
+<b>Skirting:</b>
+${d.skirting} sqft
+
+<br><br>
+
+<b>Adhesive:</b>
+${d.adhesive} Bags
+
+<br><br>
+
+<b>Grout:</b>
+${d.grout}
+
+`;
 
 }
