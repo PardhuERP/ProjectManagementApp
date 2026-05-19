@@ -146,57 +146,44 @@ ${d.pop}
 
 }
 
-document
-.getElementById(
-"result"
-).innerHTML=`
+document.getElementById("result").innerHTML=`
+
+<div class="card">
 
 <h3>📐 Results</h3>
 
-<b>Area:</b> ${Number(d.area).toFixed(2)} sqft
+<p><b>Area:</b> ${Number(d.area).toFixed(2)} sqft</p>
 
-<br><br>
+<p><b>Tiles:</b> ${d.tiles}</p>
 
-<b>Tiles:</b> ${d.tiles}
+<p><b>Skirting:</b> ${d.skirting} sqft</p>
 
-<br><br>
+<p><b>Skirting Tiles:</b>
+${Math.ceil((d.skirting/4)+1)}</p>
 
-<b>Skirting:</b> ${d.skirting} sqft
+<p><b>Total Tiles:</b>
+${d.tiles + Math.ceil((d.skirting/4)+1)}</p>
 
-<br><br>
+<p><b>Adhesive:</b>
+${d.adhesive} Bags</p>
 
-<b>Skirting Tiles:</b> ${Math.ceil((d.skirting/4)+1)}
+<p><b>Grout:</b>
+${d.grout}</p>
 
-<br><br>
+<hr>
 
-<b>Total Tiles:</b> ${d.tiles + Math.ceil((d.skirting/4)+1)}
+<p><b>False Ceiling:</b>
+${d.falseCeiling} sqft</p>
 
-<br><br>
+<p><b>Gypsum Boards:</b>
+${d.gypsum}</p>
 
-<b>Adhesive:</b> ${d.adhesive} Bags
+<p><b>Paint:</b>
+${d.paint} Liters</p>
 
-<br><br>
+<p><b>POP Bags:</b>
+${d.pop}</p>
 
-<b>Grout:</b> ${d.grout}
-
-<br><br>
-
-<b>False Ceiling:</b>
-${d.falseCeiling} sqft
-
-<br><br>
-
-<b>Gypsum Boards:</b>
-${d.gypsum}
-
-<br><br>
-
-<b>Paint:</b>
-${d.paint} Liters
-
-<br><br>
-
-<b>POP Bags:</b>
-${d.pop}
+</div>
 
 `;
