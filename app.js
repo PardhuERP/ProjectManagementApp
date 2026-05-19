@@ -158,31 +158,23 @@ document.getElementById("result").innerHTML=`
 
 <p><b>Skirting:</b> ${d.skirting} sqft</p>
 
-<p><b>Skirting Tiles:</b>
-${Math.ceil((d.skirting/4)+1)}</p>
+<p><b>Skirting Tiles:</b> ${Math.ceil((d.skirting/4)+1)}</p>
 
-<p><b>Total Tiles:</b>
-${d.tiles + Math.ceil((d.skirting/4)+1)}</p>
+<p><b>Total Tiles:</b> ${d.tiles + Math.ceil((d.skirting/4)+1)}</p>
 
-<p><b>Adhesive:</b>
-${d.adhesive} Bags</p>
+<p><b>Adhesive:</b> ${d.adhesive} Bags</p>
 
-<p><b>Grout:</b>
-${d.grout}</p>
+<p><b>Grout:</b> ${d.grout}</p>
 
 <hr>
 
-<p><b>False Ceiling:</b>
-${d.falseCeiling} sqft</p>
+<p><b>False Ceiling:</b> ${d.falseCeiling} sqft</p>
 
-<p><b>Gypsum Boards:</b>
-${d.gypsum}</p>
+<p><b>Gypsum Boards:</b> ${d.gypsum}</p>
 
-<p><b>Paint:</b>
-${d.paint} Liters</p>
+<p><b>Paint:</b> ${d.paint} Liters</p>
 
-<p><b>POP Bags:</b>
-${d.pop}</p>
+<p><b>POP Bags:</b> ${d.pop}</p>
 
 </div>
 
