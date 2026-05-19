@@ -179,3 +179,65 @@ document.getElementById("result").innerHTML=`
 </div>
 
 `;
+
+async function saveRoom(){
+
+let room=
+document.getElementById(
+"room"
+).value;
+
+let unit=
+document.getElementById(
+"unit"
+).value;
+
+let length=parseFloat(
+document.getElementById(
+"length"
+).value
+);
+
+let width=parseFloat(
+document.getElementById(
+"width"
+).value
+);
+
+if(unit=="mm"){
+
+length=
+length/304.8;
+
+width=
+width/304.8;
+
+}
+
+let url=
+
+API+
+
+"?action=addRoom"+
+
+"&project=PRJ001"+
+
+"&room="+room+
+
+"&type=Room"+
+
+"&length="+length+
+
+"&width="+width+
+
+"&height=10";
+
+let r=
+await fetch(url);
+
+let txt=
+await r.text();
+
+alert(txt);
+
+}
