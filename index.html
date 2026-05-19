@@ -1,39 +1,82 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Project Management</title>
-<link rel="stylesheet" href="style.css">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>
+Project Management
+</title>
+
+<link rel="stylesheet"
+href="style.css">
+
 </head>
+
 <body>
 
 <div class="header">
-<h2>🏗 Project Management</h2>
+
+<h2>
+🏗 Project Management
+</h2>
+
 </div>
+
 
 <div class="card">
 
-<h3>Room Calculator</h3>
+<h3>
+Room Calculator
+</h3>
 
-<input id="room"
-placeholder="Room Name">
+
+<input
+id="room"
+placeholder="Room Name (Ex: Room 1)"
+>
 
 
 <select id="roomType">
 
-<option value="">Select Room Type</option>
+<option value="">
+Select Room Type
+</option>
 
-<option>Bedroom</option>
-<option>Kitchen</option>
-<option>Hall</option>
-<option>Washroom</option>
-<option>Lounge</option>
-<option>Corridor</option>
-<option>Suite Room</option>
+<option>
+Bedroom
+</option>
+
+<option>
+Kitchen
+</option>
+
+<option>
+Hall
+</option>
+
+<option>
+Washroom
+</option>
+
+<option>
+Lounge
+</option>
+
+<option>
+Corridor
+</option>
+
+<option>
+Suite Room
+</option>
 
 </select>
 
-  <select id="unit">
+
+<select id="unit">
 
 <option value="ft">
 Feet
@@ -45,39 +88,73 @@ Millimeter
 
 </select>
 
-<input id="length"
-placeholder="Length">
 
-<input id="width"
-placeholder="Width">
+<input
+id="length"
+placeholder="Length (ft/mm)"
+>
 
-<button onclick="calculate()">
+
+<input
+id="width"
+placeholder="Width (ft/mm)"
+>
+
+
+<button
+onclick="calculate()">
+
 Calculate
+
 </button>
 
-<button onclick="saveRoom()">
+
+<button
+onclick="saveRoom()">
+
 Save Room
+
 </button>
 
-<div id="result"></div>
 
-<hr>
-
-<button onclick="materials()">
-Material Status
-</button>
-
-<button onclick="dailyReport()">
-Daily Report
-</button>
-
-<button onclick="whatsapp()">
-WhatsApp Report
-</button>
+<div id="result">
 
 </div>
 
-<script src="app.js"></script>
+<hr>
+
+
+<button
+onclick="materials()">
+
+📦 Material Status
+
+</button>
+
+
+<button
+onclick="dailyReport()">
+
+📋 Daily Report
+
+</button>
+
+
+<button
+onclick="whatsapp()">
+
+📱 WhatsApp Report
+
+</button>
+
+
+</div>
+
+
+<script src="app.js">
+
+</script>
 
 </body>
+
 </html>
