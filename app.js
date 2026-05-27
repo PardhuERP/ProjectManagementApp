@@ -233,3 +233,43 @@ await r.text();
 alert(txt);
 
 }
+
+function plywoodCalculator(){
+
+let area=prompt(
+"Enter total plywood area (sqft)"
+);
+
+area=parseFloat(area);
+
+let sheets=
+Math.ceil(
+(area/32)*1.10
+);
+
+let fevicol=
+Math.ceil(sheets*1);
+
+let nails=
+Math.ceil(sheets*.5);
+
+alert(
+
+"🪵 Plywood Estimate\n\n"+
+
+"Area: "+area+" sqft\n\n"+
+
+"Plywood Sheets: "+
+sheets+
+
+"\n\nFevicol: "+
+fevicol+
+" Kg"+
+
+"\n\nNails: "+
+nails+
+" Kg"
+
+);
+
+}
