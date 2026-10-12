@@ -1,112 +1,186 @@
+
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
-<meta name="viewport"
-content="width=device-width,initial-scale=1">
-
-<title>
-Project Management
-</title>
-
-<link rel="stylesheet"
-href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Interior Project Management</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
-<div class="header">
-
-<h2>
-🏗 Project Management
-</h2>
-
-</div>
-
-
-  <div class="card">
-  <h3>📐 Room Calculator</h3>
-
-  <input id="room" placeholder="Room Name (Ex: Room 1)">
-
-  <select id="roomType">
-    <option value="">Select Room Type</option>
-    <option>Bedroom</option>
-    <option>Kitchen</option>
-    <option>Hall</option>
-    <option>Washroom</option>
-    <option>Lounge</option>
-    <option>Corridor</option>
-    <option>Suite Room</option>
-  </select>
-
-  <label for="unit">Measurement Unit</label>
-  <select id="unit" onchange="updateUnitLabels()">
-    <option value="ft">Feet</option>
-    <option value="mm">Millimeter</option>
-  </select>
-
-  <input id="length" type="number" min="0" step="any"
-         placeholder="Room Length">
-
-  <input id="width" type="number" min="0" step="any"
-         placeholder="Room Width">
-
-  <h3>🧱 Tile Calculator</h3>
-
-  <label for="tileSize">Tile Size</label>
-  <select id="tileSize" onchange="toggleCustomTile()">
-    <option value="2x2">2 × 2 ft</option>
-    <option value="2x4">2 × 4 ft</option>
-    <option value="3x5">3 × 5 ft</option>
-    <option value="4x2">4 × 2 ft</option>
-    <option value="custom">Custom Size</option>
-  </select>
-
-    <label for="tilesPerBox">Tiles per Box</label>
-<select id="tilesPerBox">
-  <option value="2">2 Tiles / Box</option>
-  <option value="3">3 Tiles / Box</option>
-  <option value="4" selected>4 Tiles / Box</option>
-  <option value="5">5 Tiles / Box</option>
-</select>
-
-  <div id="customTileFields" style="display:none">
-    <input id="tileLength" type="number" min="0" step="any"
-           placeholder="Tile Length (same unit as room)">
-
-    <input id="tileWidth" type="number" min="0" step="any"
-           placeholder="Tile Width (same unit as room)">
+  <div class="header">
+    <h2>🏗 Interior Project Management</h2>
   </div>
 
-  <label for="wastage">Extra tiles for cutting / wastage</label>
-  <select id="wastage">
-    <option value="0">0%</option>
-    <option value="5" selected>5%</option>
-    <option value="10">10%</option>
-    <option value="15">15%</option>
-  </select>
+  <div class="card">
+    <h3>📐 Room Calculator</h3>
 
-  <button onclick="calculate()">Calculate Room & Tiles</button>
-  <button onclick="saveRoom()">Save Room</button>
+    <label for="room">Room Name</label>
+    <input id="room" placeholder="Example: Room 1">
 
-  <div id="result"></div>
+    <label for="roomType">Room Type</label>
+    <select id="roomType">
+      <option value="">Select Room Type</option>
+      <option>Bedroom</option>
+      <option>Kitchen</option>
+      <option>Hall</option>
+      <option>Washroom</option>
+      <option>Lounge</option>
+      <option>Corridor</option>
+      <option>Suite Room</option>
+      <option>Meeting Room</option>
+      <option>Office</option>
+      <option>Other</option>
+    </select>
 
-  <hr>
+    <label for="unit">Room Measurement Unit</label>
+    <select id="unit" onchange="updateUnitLabels()">
+      <option value="ft">Feet</option>
+      <option value="mm">Millimetres</option>
+    </select>
 
-  <button onclick="plywoodCalculator()">🪵 Plywood Calculator</button>
-  <button onclick="materials()">📦 Material Status</button>
-  <button onclick="dailyReport()">📋 Daily Report</button>
-  <button onclick="whatsapp()">📱 WhatsApp Report</button>
-</div>
+    <label for="length">Room Length</label>
+    <input id="length" type="number" min="0" step="any"
+           placeholder="Room Length (ft)">
 
+    <label for="width">Room Width</label>
+    <input id="width" type="number" min="0" step="any"
+           placeholder="Room Width (ft)">
 
-<script src="app.js">
+    <label for="roomHeight">Room Height (feet)</label>
+    <input id="roomHeight" type="number" min="1" step="any" value="10">
 
-</script>
+    <hr>
 
+    <h3>🧱 Floor Tile Calculator</h3>
+
+    <label for="tileSize">Tile Size</label>
+    <select id="tileSize" onchange="toggleCustomTile()">
+      <option value="2x2">2 × 2 ft</option>
+      <option value="2x4">2 × 4 ft</option>
+      <option value="3x5">3 × 5 ft</option>
+      <option value="4x2">4 × 2 ft</option>
+      <option value="custom">Custom Size</option>
+    </select>
+
+    <div id="customTileFields" style="display:none">
+      <label for="tileUnit">Custom Tile Measurement Unit</label>
+      <select id="tileUnit" onchange="updateUnitLabels()">
+        <option value="ft">Feet</option>
+        <option value="mm">Millimetres</option>
+      </select>
+
+      <label for="tileLength">Tile Length</label>
+      <input id="tileLength" type="number" min="0" step="any"
+             placeholder="Tile Length">
+
+      <label for="tileWidth">Tile Width</label>
+      <input id="tileWidth" type="number" min="0" step="any"
+             placeholder="Tile Width">
+    </div>
+
+    <label for="tilesPerBox">Tiles per Box</label>
+    <select id="tilesPerBox">
+      <option value="2">2 Tiles / Box</option>
+      <option value="3">3 Tiles / Box</option>
+      <option value="4" selected>4 Tiles / Box</option>
+      <option value="5">5 Tiles / Box</option>
+    </select>
+
+    <label for="wastage">Extra Tiles for Cutting / Wastage</label>
+    <select id="wastage">
+      <option value="0">0%</option>
+      <option value="5" selected>5%</option>
+      <option value="10">10%</option>
+      <option value="15">15%</option>
+    </select>
+
+    <hr>
+
+    <h3>🧰 Additional Material Options</h3>
+    <p>Select the materials you want to estimate.</p>
+
+    <label>
+      <input type="checkbox" id="useAdhesive" checked>
+      Tile Adhesive / Chemical
+    </label>
+    <label for="adhesiveCoverage">Coverage per Bag (sq ft)</label>
+    <input id="adhesiveCoverage" type="number" min="1" value="50">
+
+    <label>
+      <input type="checkbox" id="useSand">
+      Sand Bed — 1 Inch Thick
+    </label>
+
+    <label>
+      <input type="checkbox" id="useFeviquick">
+      Feviquick
+    </label>
+    <label for="feviquickCoverage">Coverage per Packet (sq ft)</label>
+    <input id="feviquickCoverage" type="number" min="1" value="100">
+
+    <label>
+      <input type="checkbox" id="useSpacers">
+      Tile Spacers
+    </label>
+    <label for="spacerCoverage">Tiles Covered per Spacer Packet</label>
+    <input id="spacerCoverage" type="number" min="1" value="100">
+
+    <label>
+      <input type="checkbox" id="useGrout" checked>
+      Tile Grout
+    </label>
+    <label for="groutCoverage">Coverage per Kg (sq ft)</label>
+    <input id="groutCoverage" type="number" min="1" value="10">
+
+    <label>
+      <input type="checkbox" id="usePaint">
+      Wall Paint
+    </label>
+    <label for="paintCoverage">Coverage per Litre per Coat (sq ft)</label>
+    <input id="paintCoverage" type="number" min="1" value="100">
+
+    <label for="paintCoats">Number of Paint Coats</label>
+    <input id="paintCoats" type="number" min="1" value="2">
+
+    <label>
+      <input type="checkbox" id="usePutty">
+      Wall Putty
+    </label>
+    <label for="puttyCoverage">Coverage per Bag (sq ft)</label>
+    <input id="puttyCoverage" type="number" min="1" value="100">
+
+    <label>
+      <input type="checkbox" id="useFalseCeiling">
+      False Ceiling
+    </label>
+    <label for="ceilingWastage">False Ceiling Wastage (%)</label>
+    <input id="ceilingWastage" type="number" min="0" value="5">
+
+    <label>
+      <input type="checkbox" id="useSkirting">
+      Floor Skirting
+    </label>
+    <label for="skirtingHeight">Skirting Height (inches)</label>
+    <input id="skirtingHeight" type="number" min="1" value="4">
+
+    <hr>
+
+    <button onclick="calculate()">📊 Calculate Room & Materials</button>
+    <button onclick="saveRoom()">💾 Save Room</button>
+
+    <div id="result"></div>
+
+    <hr>
+
+    <h3>🛠 Other Tools</h3>
+    <button onclick="plywoodCalculator()">🪵 Plywood Calculator</button>
+    <button onclick="materials()">📦 Material Status</button>
+    <button onclick="dailyReport()">📋 Daily Report</button>
+    <button onclick="whatsapp()">📱 WhatsApp Report</button>
+  </div>
+
+  <script src="app.js"></script>
 </body>
-
 </html>
