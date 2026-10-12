@@ -190,6 +190,22 @@ function calculate() {
   };
 }
 
+const tilesPerBox = Number(
+  document.getElementById("tilesPerBox").value
+);
+
+const boxesRequired = Math.ceil(totalTiles / tilesPerBox);
+const totalTilesInBoxes = boxesRequired * tilesPerBox;
+const extraTiles = totalTilesInBoxes - totalTiles;
+
+document.getElementById("result").innerHTML = `
+  <p><b>Total Tiles Required:</b> ${totalTiles}</p>
+  <p><b>Tiles per Box:</b> ${tilesPerBox}</p>
+  <p><b>Total Boxes Required:</b> ${boxesRequired}</p>
+  <p><b>Total Tiles in Full Boxes:</b> ${totalTilesInBoxes}</p>
+  <p><b>Extra Tiles:</b> ${extraTiles}</p>
+`;
+
 function escapeHTML(value) {
   return String(value).replace(/[&<>"']/g, char => ({
     "&": "&amp;",
