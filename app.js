@@ -1,167 +1,164 @@
 
 const API = "https://script.google.com/macros/s/AKfycbypgdv1t-xNbeykrN6GFdAMz-N8e5hSh4fgZ7W93X-mOn5f1yljanPwHPFzBBE38A/exec";
 
-// =====================================
+// ============================================
+// COMMON HELPERS
+// ============================================
+function getValue(id, fallback = 0) {
+  const element = document.getElementById(id);
+  if (!element || element.value === "") return fallback;
+  const value = Number(element.value);
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function isChecked(id, fallback = false) {
+  const element = document.getElementById(id);
+  return element ? element.checked : fallback;
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+function roundUp(value) {
+  return Math.ceil(value);
+}
+
+// ============================================
 // MATERIAL STATUS
-// =====================================
+// ============================================
 async function materials() {
   try {
     const response = await fetch(API + "?action=materialStatus");
-
-    if (!response.ok) {
-      throw new Error("Unable to load material status.");
-    }
+    if (!response.ok) throw new Error("Request failed");
 
     const data = await response.json();
-
-    let html = "📦 Material Status\n\n";
 
     if (!Array.isArray(data) || data.length === 0) {
       alert("No material records found.");
       return;
     }
 
+    let message = "📦 MATERIAL STATUS\n\n";
+
     data.forEach(item => {
-      html +=
+      message +=
         item.material +
         "\nBalance: " + item.balance +
         "\nStatus: " + item.status +
         "\n\n";
     });
 
-    alert(html);
+    alert(message);
   } catch (error) {
     console.error(error);
-    alert("Error loading material status. Please try again.");
+    alert("Unable to load material status.");
   }
 }
 
-// =====================================
+// ============================================
 // DAILY PDF REPORT
-// =====================================
+// ============================================
 function dailyReport() {
   window.open(API + "?action=pdfReport", "_blank");
 }
 
-// =====================================
+// ============================================
 // WHATSAPP REPORT
-// =====================================
+// ============================================
 async function whatsapp() {
   try {
     const response = await fetch(API + "?action=whatsappReport");
-
-    if (!response.ok) {
-      throw new Error("Unable to generate WhatsApp report.");
-    }
+    if (!response.ok) throw new Error("Request failed");
 
     const message = await response.text();
     alert(message);
   } catch (error) {
     console.error(error);
-    alert("Error generating WhatsApp report.");
+    alert("Unable to generate WhatsApp report.");
   }
 }
 
-// =====================================
+// ============================================
 // OPEN ROOMS
-// =====================================
-async function openRooms() {
+// ============================================
+function openRooms() {
   const result = document.getElementById("result");
-
-  if (result) {
-    result.innerHTML = "";
-  }
+  if (result) result.innerHTML = "";
 }
 
-// =====================================
+// ============================================
 // UPDATE MEASUREMENT LABELS
-// Room unit and tile unit are separate.
-// Preset tile sizes are always in feet.
-// =====================================
+// Room dimensions follow room unit.
+// Preset tile sizes always use feet.
+// ============================================
 function updateUnitLabels() {
-  const unitElement = document.getElementById("unit");
-  const unit = unitElement ? unitElement.value : "ft";
+  const unit = document.getElementById("unit")?.value || "ft";
+  const tileSize = document.getElementById("tileSize")?.value;
+  const tileUnit = document.getElementById("tileUnit")?.value || "ft";
 
-  const lengthElement = document.getElementById("length");
-  const widthElement = document.getElementById("width");
+  const length = document.getElementById("length");
+  const width = document.getElementById("width");
+  const tileLength = document.getElementById("tileLength");
+  const tileWidth = document.getElementById("tileWidth");
 
-  if (lengthElement) {
-    lengthElement.placeholder = `Room Length (${unit})`;
-  }
+  if (length) length.placeholder = `Room Length (${unit})`;
+  if (width) width.placeholder = `Room Width (${unit})`;
 
-  if (widthElement) {
-    widthElement.placeholder = `Room Width (${unit})`;
-  }
+  const actualTileUnit = tileSize === "custom" ? tileUnit : "ft";
 
-  const tileSizeElement = document.getElementById("tileSize");
-  const isCustom = tileSizeElement &&
-    tileSizeElement.value === "custom";
-
-  const tileUnitElement = document.getElementById("tileUnit");
-  const tileUnit = tileUnitElement ? tileUnitElement.value : "ft";
-
-  const tileLengthElement = document.getElementById("tileLength");
-  const tileWidthElement = document.getElementById("tileWidth");
-
-  if (tileLengthElement) {
-    tileLengthElement.placeholder =
-      `Tile Length (${isCustom ? tileUnit : "ft"})`;
-  }
-
-  if (tileWidthElement) {
-    tileWidthElement.placeholder =
-      `Tile Width (${isCustom ? tileUnit : "ft"})`;
-  }
+  if (tileLength) tileLength.placeholder = `Tile Length (${actualTileUnit})`;
+  if (tileWidth) tileWidth.placeholder = `Tile Width (${actualTileUnit})`;
 }
 
-// =====================================
-// SHOW / HIDE CUSTOM TILE DIMENSIONS
-// =====================================
+// ============================================
+// CUSTOM TILE FIELDS
+// ============================================
 function toggleCustomTile() {
-  const tileSizeElement = document.getElementById("tileSize");
-  const customFields = document.getElementById("customTileFields");
+  const tileSize = document.getElementById("tileSize");
+  const fields = document.getElementById("customTileFields");
 
-  if (!tileSizeElement || !customFields) return;
+  if (!tileSize || !fields) return;
 
-  customFields.style.display =
-    tileSizeElement.value === "custom" ? "block" : "none";
+  fields.style.display =
+    tileSize.value === "custom" ? "block" : "none";
 
   updateUnitLabels();
 }
 
-// =====================================
-// ROOM AND TILE CALCULATOR
-// =====================================
+// ============================================
+// ROOM + TILE + INTERIOR MATERIAL CALCULATOR
+// ============================================
 function calculate() {
-  const room = document.getElementById("room").value.trim();
-  const roomType = document.getElementById("roomType").value;
-  const unit = document.getElementById("unit").value;
+  const room = document.getElementById("room")?.value.trim() || "";
+  const roomType = document.getElementById("roomType")?.value || "";
+  const unit = document.getElementById("unit")?.value || "ft";
 
-  const length = Number(document.getElementById("length").value);
-  const width = Number(document.getElementById("width").value);
+  const length = getValue("length");
+  const width = getValue("width");
 
-  const tileSize = document.getElementById("tileSize").value;
-  const wastage = Number(document.getElementById("wastage").value);
-
-  const tilesPerBoxElement =
-    document.getElementById("tilesPerBox");
-
-  const tilesPerBox = tilesPerBoxElement
-    ? Number(tilesPerBoxElement.value)
-    : 1;
+  const tileSize = document.getElementById("tileSize")?.value || "2x2";
+  const wastage = getValue("wastage", 5);
+  const tilesPerBox = getValue("tilesPerBox", 4);
 
   if (!room || !roomType) {
     alert("Enter room name and select room type.");
     return;
   }
 
-  if (!(length > 0) || !(width > 0)) {
+  if (length <= 0 || width <= 0) {
     alert("Enter valid room length and width.");
     return;
   }
 
-  if (!Number.isFinite(wastage) || wastage < 0) {
-    alert("Select a valid wastage percentage.");
+  if (wastage < 0 || !Number.isFinite(wastage)) {
+    alert("Enter valid tile wastage percentage.");
     return;
   }
 
@@ -170,126 +167,206 @@ function calculate() {
     return;
   }
 
+  // Tile dimensions
   let tileLength;
   let tileWidth;
   let tileUnit = "ft";
 
   if (tileSize === "custom") {
-    tileLength = Number(
-      document.getElementById("tileLength").value
-    );
-
-    tileWidth = Number(
-      document.getElementById("tileWidth").value
-    );
-
-    const tileUnitElement =
-      document.getElementById("tileUnit");
-
-    tileUnit = tileUnitElement
-      ? tileUnitElement.value
-      : "ft";
+    tileLength = getValue("tileLength");
+    tileWidth = getValue("tileWidth");
+    tileUnit = document.getElementById("tileUnit")?.value || "ft";
   } else {
-    // Examples: 2x2, 2x4, 3x5, 4x2.
-    // Preset dimensions are always in feet.
-    [tileLength, tileWidth] =
-      tileSize.split("x").map(Number);
+    [tileLength, tileWidth] = tileSize.split("x").map(Number);
   }
 
-  if (
-    !Number.isFinite(tileLength) ||
-    !Number.isFinite(tileWidth) ||
-    tileLength <= 0 ||
-    tileWidth <= 0
-  ) {
+  if (tileLength <= 0 || tileWidth <= 0) {
     alert("Enter valid tile dimensions.");
     return;
   }
 
-  // Convert room measurements to feet.
+  // Convert all measurements to feet.
   const roomFactor = unit === "mm" ? 1 / 304.8 : 1;
-
-  // Convert tile measurements to feet.
   const tileFactor = tileUnit === "mm" ? 1 / 304.8 : 1;
 
   const roomLengthFt = length * roomFactor;
   const roomWidthFt = width * roomFactor;
-
   const tileLengthFt = tileLength * tileFactor;
   const tileWidthFt = tileWidth * tileFactor;
 
   const roomArea = roomLengthFt * roomWidthFt;
   const tileArea = tileLengthFt * tileWidthFt;
+  const perimeter = 2 * (roomLengthFt + roomWidthFt);
 
   // Tile quantity by area.
-  const baseTiles = Math.ceil(roomArea / tileArea);
-
-  // Add wastage tiles.
-  const wastageTiles = Math.ceil(
-    baseTiles * wastage / 100
-  );
-
+  const baseTiles = roundUp(roomArea / tileArea);
+  const wastageTiles = roundUp(baseTiles * wastage / 100);
   const totalTiles = baseTiles + wastageTiles;
 
-  // Calculate complete boxes.
-  const boxesRequired = Math.ceil(
-    totalTiles / tilesPerBox
-  );
-
+  // Box quantity.
+  const boxesRequired = roundUp(totalTiles / tilesPerBox);
   const totalTilesInBoxes = boxesRequired * tilesPerBox;
   const extraBoxTiles = totalTilesInBoxes - totalTiles;
 
+  // Room height and wall area.
+  const roomHeight = getValue("roomHeight", 10);
+  const wallArea = perimeter * roomHeight;
+  const ceilingArea = roomArea;
+
+  // Adhesive / chemical bags.
+  const adhesiveCoverage = getValue("adhesiveCoverage", 50);
+  const adhesiveBags = isChecked("useAdhesive", true) && adhesiveCoverage > 0
+    ? roundUp(roomArea / adhesiveCoverage)
+    : 0;
+
+  // Sand bed: optional 1-inch depth.
+  const sandCubicFeet = isChecked("useSand")
+    ? roomArea / 12
+    : 0;
+  const sandCubicMetres = sandCubicFeet / 35.3147;
+
+  // Feviquick packets.
+  const feviquickCoverage = getValue("feviquickCoverage", 100);
+  const feviquickPackets =
+    isChecked("useFeviquick") && feviquickCoverage > 0
+      ? roundUp(roomArea / feviquickCoverage)
+      : 0;
+
+  // Spacer packets.
+  const spacerCoverage = getValue("spacerCoverage", 100);
+  const spacerPackets =
+    isChecked("useSpacers") && spacerCoverage > 0
+      ? roundUp(totalTiles / spacerCoverage)
+      : 0;
+
+  // Grout estimate using user-entered coverage per kg.
+  const groutCoverage = getValue("groutCoverage", 10);
+  const groutKg =
+    isChecked("useGrout", true) && groutCoverage > 0
+      ? roundUp(roomArea / groutCoverage)
+      : 0;
+
+  // Paint: full wall area multiplied by coats.
+  const paintCoverage = getValue("paintCoverage", 100);
+  const paintCoats = getValue("paintCoats", 2);
+  const paintLitres =
+    isChecked("usePaint") && paintCoverage > 0 && paintCoats > 0
+      ? Math.ceil(wallArea * paintCoats / paintCoverage)
+      : 0;
+
+  // False ceiling area.
+  const falseCeilingArea = isChecked("useFalseCeiling")
+    ? ceilingArea
+    : 0;
+  const falseCeilingWastage = isChecked("useFalseCeiling")
+    ? getValue("ceilingWastage", 5)
+    : 0;
+  const falseCeilingTotal = falseCeilingArea > 0
+    ? falseCeilingArea * (1 + falseCeilingWastage / 100)
+    : 0;
+
+  // Wall putty bags.
+  const puttyCoverage = getValue("puttyCoverage", 100);
+  const puttyBags =
+    isChecked("usePutty") && puttyCoverage > 0
+      ? roundUp(wallArea / puttyCoverage)
+      : 0;
+
+  // Skirting length, optional.
+  const skirtingHeightInches = getValue("skirtingHeight", 4);
+  const skirtingLength = isChecked("useSkirting")
+    ? perimeter
+    : 0;
+  const skirtingArea = skirtingLength * (skirtingHeightInches / 12);
+
+  // Display results.
   const result = document.getElementById("result");
+  if (!result) {
+    alert("Result container #result was not found in HTML.");
+    return;
+  }
 
   result.innerHTML = `
-    <h3>📊 Calculation Result</h3>
+    <h3>📊 Room Calculation</h3>
 
     <p><b>Room:</b> ${escapeHTML(room)}</p>
     <p><b>Room Type:</b> ${escapeHTML(roomType)}</p>
-
-    <p><b>Room Dimensions:</b>
-      ${length} × ${width} ${escapeHTML(unit)}
-    </p>
-
-    <p><b>Room Area:</b>
-      ${roomArea.toFixed(2)} sq ft
-    </p>
-
-    <p><b>Tile Size:</b>
-      ${tileLength} × ${tileWidth} ${escapeHTML(tileUnit)}
-    </p>
-
-    <p><b>Area per Tile:</b>
-      ${tileArea.toFixed(2)} sq ft
-    </p>
-
-    <p><b>Tiles before wastage:</b> ${baseTiles}</p>
-    <p><b>Wastage (${wastage}%):</b> ${wastageTiles}</p>
+    <p><b>Room Dimensions:</b> ${length} × ${width} ${escapeHTML(unit)}</p>
+    <p><b>Room Area:</b> ${roomArea.toFixed(2)} sq ft</p>
+    <p><b>Wall Area (estimated):</b> ${wallArea.toFixed(2)} sq ft</p>
+    <p><b>Ceiling Area:</b> ${ceilingArea.toFixed(2)} sq ft</p>
 
     <hr>
+    <h3>🧱 Floor Tiles</h3>
 
-    <h3>🧱 Tile Requirement</h3>
-
-    <p><b>Total Tiles Required:</b> ${totalTiles}</p>
+    <p><b>Tile Size:</b> ${tileLength} × ${tileWidth} ${escapeHTML(tileUnit)}</p>
+    <p><b>Area per Tile:</b> ${tileArea.toFixed(2)} sq ft</p>
+    <p><b>Tiles before wastage:</b> ${baseTiles}</p>
+    <p><b>Wastage (${wastage}%):</b> ${wastageTiles}</p>
+    <h3>Total Tiles Required: ${totalTiles}</h3>
     <p><b>T. Tile / Box Qty:</b> ${tilesPerBox}</p>
-    <p><b>Total Boxes Required:</b> ${boxesRequired}</p>
+    <h3>Total Boxes Required: ${boxesRequired}</h3>
     <p><b>Total Tiles in Boxes:</b> ${totalTilesInBoxes}</p>
     <p><b>Extra Tiles from Full Boxes:</b> ${extraBoxTiles}</p>
 
+    <hr>
+    <h3>🧰 Additional Materials</h3>
+
+    ${isChecked("useAdhesive", true)
+      ? `<p><b>Tile Adhesive / Chemical:</b> ${adhesiveBags} bags</p>`
+      : ""}
+
+    ${isChecked("useSand")
+      ? `<p><b>Sand Bed (1 inch):</b> ${sandCubicFeet.toFixed(2)} cu ft (${sandCubicMetres.toFixed(3)} m³)</p>`
+      : ""}
+
+    ${isChecked("useFeviquick")
+      ? `<p><b>Feviquick:</b> ${feviquickPackets} packets (estimated)</p>`
+      : ""}
+
+    ${isChecked("useSpacers")
+      ? `<p><b>Tile Spacers:</b> ${spacerPackets} packets (estimated)</p>`
+      : ""}
+
+    ${isChecked("useGrout", true)
+      ? `<p><b>Grout:</b> ${groutKg} kg (estimated)</p>`
+      : ""}
+
+    ${isChecked("usePaint")
+      ? `<p><b>Paint:</b> ${paintLitres} litres (${paintCoats} coats, walls only)</p>`
+      : ""}
+
+    ${isChecked("useFalseCeiling")
+      ? `<p><b>False Ceiling:</b> ${falseCeilingTotal.toFixed(2)} sq ft including ${falseCeilingWastage}% allowance</p>`
+      : ""}
+
+    ${isChecked("usePutty")
+      ? `<p><b>Wall Putty:</b> ${puttyBags} bags (estimated)</p>`
+      : ""}
+
+    ${isChecked("useSkirting")
+      ? `<p><b>Skirting Length:</b> ${skirtingLength.toFixed(2)} ft</p>
+         <p><b>Skirting Area:</b> ${skirtingArea.toFixed(2)} sq ft</p>`
+      : ""}
+
     <small>
-      Estimate is based on floor area. Cutting patterns,
-      layout and breakage may affect actual quantities.
+      Material quantities are estimates. Confirm product coverage,
+      package sizes, door/window deductions and site conditions before ordering.
     </small>
   `;
 
-  // Store values for use by Save Room.
+  // Save calculation for Save Room and future integrations.
   window.lastRoomCalculation = {
     room,
     roomType,
     unit,
     length,
     width,
+    roomLengthFt,
+    roomWidthFt,
     roomAreaSqFt: roomArea,
+    wallAreaSqFt: wallArea,
+    ceilingAreaSqFt: ceilingArea,
     tileLength,
     tileWidth,
     tileUnit,
@@ -301,31 +378,33 @@ function calculate() {
     tilesPerBox,
     boxesRequired,
     totalTilesInBoxes,
-    extraBoxTiles
+    extraBoxTiles,
+    roomHeightFt: roomHeight,
+    adhesiveBags,
+    sandCubicFeet,
+    sandCubicMetres,
+    feviquickPackets,
+    spacerPackets,
+    groutKg,
+    paintLitres,
+    paintCoats,
+    falseCeilingAreaSqFt: falseCeilingTotal,
+    puttyBags,
+    skirtingLengthFt: skirtingLength,
+    skirtingAreaSqFt: skirtingArea
   };
 }
 
-// =====================================
-// SAFE HTML TEXT
-// =====================================
-function escapeHTML(value) {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[char]);
-}
-
-// =====================================
+// ============================================
 // SAVE ROOM TO GOOGLE SHEETS
-// =====================================
+// Existing endpoint saves room dimensions only.
+// Additional material fields require backend support.
+// ============================================
 async function saveRoom() {
   const calculation = window.lastRoomCalculation;
 
   if (!calculation) {
-    alert("Please calculate the room before saving.");
+    alert("Calculate the room before saving.");
     return;
   }
 
@@ -334,21 +413,14 @@ async function saveRoom() {
     project: "PRJ001",
     room: calculation.room,
     type: calculation.roomType,
-    length: String(calculation.roomLengthFt ??
-      (calculation.unit === "mm"
-        ? calculation.length / 304.8
-        : calculation.length)),
-    width: String(calculation.roomWidthFt ??
-      (calculation.unit === "mm"
-        ? calculation.width / 304.8
-        : calculation.width)),
-    height: "10"
+    length: String(calculation.roomLengthFt),
+    width: String(calculation.roomWidthFt),
+    height: String(calculation.roomHeightFt)
   });
 
   try {
     const response = await fetch(API + "?" + params.toString());
     const message = await response.text();
-
     alert(message);
   } catch (error) {
     console.error(error);
@@ -356,32 +428,30 @@ async function saveRoom() {
   }
 }
 
-// =====================================
+// ============================================
 // PLYWOOD CALCULATOR
-// =====================================
+// ============================================
 function plywoodCalculator() {
-  let area = prompt("Enter total plywood area (sq ft)");
+  const answer = prompt("Enter total plywood area (sq ft)");
 
-  if (area === null) return;
+  if (answer === null) return;
 
-  area = Number(area);
+  const area = Number(answer);
 
   if (!Number.isFinite(area) || area <= 0) {
-    alert("Please enter a valid area in square feet.");
+    alert("Enter a valid area in square feet.");
     return;
   }
 
-  // Standard 8x4 ft sheet = 32 sq ft.
   const sheets = Math.ceil((area / 32) * 1.10);
-  const fevicol = Math.ceil(sheets * 1);
+  const fevicol = Math.ceil(sheets);
   const nails = Math.ceil(sheets * 0.5);
 
   alert(
     "🪵 Plywood Estimate\n\n" +
     "Area: " + area.toFixed(2) + " sq ft\n\n" +
-    "Plywood Sheets (including 10% allowance): " +
-    sheets + "\n\n" +
-    "Fevicol: " + fevicol + " Kg\n\n" +
-    "Nails: " + nails + " Kg"
+    "Plywood Sheets (including 10% allowance): " + sheets +
+    "\n\nFevicol: " + fevicol + " Kg" +
+    "\n\nNails: " + nails + " Kg"
   );
 }
