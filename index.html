@@ -26,134 +26,72 @@ href="style.css">
 </div>
 
 
-<div class="card">
+  <div class="card">
+  <h3>📐 Room Calculator</h3>
 
-<h3>
-Room Calculator
-</h3>
+  <input id="room" placeholder="Room Name (Ex: Room 1)">
 
+  <select id="roomType">
+    <option value="">Select Room Type</option>
+    <option>Bedroom</option>
+    <option>Kitchen</option>
+    <option>Hall</option>
+    <option>Washroom</option>
+    <option>Lounge</option>
+    <option>Corridor</option>
+    <option>Suite Room</option>
+  </select>
 
-<input
-id="room"
-placeholder="Room Name (Ex: Room 1)"
->
+  <label for="unit">Measurement Unit</label>
+  <select id="unit" onchange="updateUnitLabels()">
+    <option value="ft">Feet</option>
+    <option value="mm">Millimeter</option>
+  </select>
 
+  <input id="length" type="number" min="0" step="any"
+         placeholder="Room Length">
 
-<select id="roomType">
+  <input id="width" type="number" min="0" step="any"
+         placeholder="Room Width">
 
-<option value="">
-Select Room Type
-</option>
+  <h3>🧱 Tile Calculator</h3>
 
-<option>
-Bedroom
-</option>
+  <label for="tileSize">Tile Size</label>
+  <select id="tileSize" onchange="toggleCustomTile()">
+    <option value="2x2">2 × 2 ft</option>
+    <option value="2x4">2 × 4 ft</option>
+    <option value="3x5">3 × 5 ft</option>
+    <option value="4x2">4 × 2 ft</option>
+    <option value="custom">Custom Size</option>
+  </select>
 
-<option>
-Kitchen
-</option>
+  <div id="customTileFields" style="display:none">
+    <input id="tileLength" type="number" min="0" step="any"
+           placeholder="Tile Length (same unit as room)">
 
-<option>
-Hall
-</option>
+    <input id="tileWidth" type="number" min="0" step="any"
+           placeholder="Tile Width (same unit as room)">
+  </div>
 
-<option>
-Washroom
-</option>
+  <label for="wastage">Extra tiles for cutting / wastage</label>
+  <select id="wastage">
+    <option value="0">0%</option>
+    <option value="5" selected>5%</option>
+    <option value="10">10%</option>
+    <option value="15">15%</option>
+  </select>
 
-<option>
-Lounge
-</option>
+  <button onclick="calculate()">Calculate Room & Tiles</button>
+  <button onclick="saveRoom()">Save Room</button>
 
-<option>
-Corridor
-</option>
+  <div id="result"></div>
 
-<option>
-Suite Room
-</option>
+  <hr>
 
-</select>
-
-
-<select id="unit">
-
-<option value="ft">
-Feet
-</option>
-
-<option value="mm">
-Millimeter
-</option>
-
-</select>
-
-
-<input
-id="length"
-placeholder="Length (ft/mm)"
->
-
-
-<input
-id="width"
-placeholder="Width (ft/mm)"
->
-
-
-<button
-onclick="calculate()">
-
-Calculate
-
-</button>
-
-
-<button
-onclick="saveRoom()">
-
-Save Room
-
-</button>
-
-
-<div id="result">
-
-</div>
-
-<hr>
-
-<button onclick="plywoodCalculator()">
-
-🪵 Plywood Calculator
-
-</button>
-
-
-<button
-onclick="materials()">
-
-📦 Material Status
-
-</button>
-
-
-<button
-onclick="dailyReport()">
-
-📋 Daily Report
-
-</button>
-
-
-<button
-onclick="whatsapp()">
-
-📱 WhatsApp Report
-
-</button>
-
-
+  <button onclick="plywoodCalculator()">🪵 Plywood Calculator</button>
+  <button onclick="materials()">📦 Material Status</button>
+  <button onclick="dailyReport()">📋 Daily Report</button>
+  <button onclick="whatsapp()">📱 WhatsApp Report</button>
 </div>
 
 
