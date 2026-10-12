@@ -60,102 +60,144 @@ document
 }
 
 
-async function calculate(){
+function updateUnitLabels() {
+  const unit = document.getElementById("unit").value;
 
-let unit=
-document.getElementById(
-"unit"
-).value;
+  document.getElementById("length").placeholder =
+    `Room Length (${unit})`;
 
-let length=parseFloat(
-document.getElementById(
-"length"
-).value
-);
+  document.getElementById("width").placeholder =
+    `Room Width (${unit})`;
 
-let width=parseFloat(
-document.getElementById(
-"width"
-).value
-);
+  document.getElementById("tileLength").placeholder =
+    `Tile Length (${unit})`;
 
-if(unit=="mm"){
-
-length=length/304.8;
-
-width=width/304.8;
-
+  document.getElementById("tileWidth").placeholder =
+    `Tile Width (${unit})`;
 }
 
-let r=await fetch(
+function toggleCustomTile() {
+  const custom =
+    document.getElementById("tileSize").value === "custom";
 
-API+
+  document.getElementById("customTileFields").style.display =
+    custom ? "block" : "none";
+}
 
-"?action=calculate"+
+function calculate() {
+  const room = document.getElementById("room").value.trim();
+  const roomType = document.getElementById("roomType").value;
+  const unit = document.getElementById("unit").value;
 
-"&length="+length+
+  const length = Number(document.getElementById("length").value);
+  const width = Number(document.getElementById("width").value);
 
-"&width="+width+
+  const tileSize = document.getElementById("tileSize").value;
+  const wastage = Number(document.getElementById("wastage").value);
 
-"&height=10"
+  if (!room || !roomType) {
+    alert("Enter room name and select room type.");
+    return;
+  }
 
-);
+  if (!(length > 0) || !(width > 0)) {
+    alert("Enter valid room length and width.");
+    return;
+  }
 
-let d=await r.json();
+  let tileLength, tileWidth;
 
-document.getElementById(
-"result"
-).innerHTML=`
+  if (tileSize === "custom") {
+    tileLength = Number(document.getElementById("tileLength").value);
+    tileWidth = Number(document.getElementById("tileWidth").value);
+  } else {
+    [tileLength, tileWidth] = tileSize.split("x").map(Number);
+  }
 
-<div class="card">
+  if (!(tileLength > 0) || !(tileWidth > 0)) {
+    alert("Enter valid tile dimensions.");
+    return;
+  }
 
-<h3>📐 Results</h3>
+  // Convert room and tile measurements to feet.
+  const factor = unit === "mm" ? 1 / 304.8 : 1;
 
-<p><b>Area:</b>
-${Number(d.area).toFixed(2)}
-sqft</p>
+  const roomLengthFt = length * factor;
+  const roomWidthFt = width * factor;
+  const tileLengthFt = tileLength * factor;
+  const tileWidthFt = tileWidth * factor;
 
-<p><b>Tiles:</b>
-${d.tiles}</p>
+  const roomArea = roomLengthFt * roomWidthFt;
+  const tileArea = tileLengthFt * tileWidthFt;
 
-<p><b>Skirting:</b>
-${d.skirting}
-sqft</p>
+  const exactTiles = roomArea / tileArea;
+  const baseTiles = Math.ceil(exactTiles);
+  const extraTiles = Math.ceil(baseTiles * wastage / 100);
+  const totalTiles = baseTiles + extraTiles;
 
-<p><b>Skirting Tiles:</b>
-${Math.ceil((d.skirting/4)+1)}</p>
+  const displayUnit = "sq ft";
 
-<p><b>Total Tiles:</b>
-${d.tiles+
-Math.ceil((d.skirting/4)+1)}</p>
+  const result = document.getElementById("result");
 
-<p><b>Adhesive:</b>
-${d.adhesive}
-Bags</p>
+  result.innerHTML = `
+    <h3>📊 Calculation Result</h3>
 
-<p><b>Grout:</b>
-${d.grout}</p>
+    <p><b>Room:</b> ${escapeHTML(room)}</p>
+    <p><b>Room Type:</b> ${escapeHTML(roomType)}</p>
 
-<hr>
+    <p><b>Room Dimensions:</b>
+      ${length} × ${width} ${unit}
+    </p>
 
-<p><b>False Ceiling:</b>
-${d.falseCeiling}
-sqft</p>
+    <p><b>Room Area:</b>
+      ${roomArea.toFixed(2)} ${displayUnit}
+    </p>
 
-<p><b>Gypsum Boards:</b>
-${d.gypsum}</p>
+    <p><b>Tile Size:</b>
+      ${tileLength} × ${tileWidth} ${unit}
+    </p>
 
-<p><b>Paint:</b>
-${d.paint}
-Liters</p>
+    <p><b>Area per Tile:</b>
+      ${tileArea.toFixed(2)} ${displayUnit}
+    </p>
 
-<p><b>POP Bags:</b>
-${d.pop}</p>
+    <p><b>Tiles before wastage:</b> ${baseTiles}</p>
+    <p><b>Extra Tiles (${wastage}%):</b> ${extraTiles}</p>
 
-</div>
+    <h3>Total Tiles Required: ${totalTiles}</h3>
 
-`;
+    <small>
+      Estimate based on area. Actual cutting, tile layout,
+      grout gaps and breakage may change the final quantity.
+    </small>
+  `;
 
+  // Retain the calculation for your Save Room function.
+  window.lastRoomCalculation = {
+    room,
+    roomType,
+    unit,
+    length,
+    width,
+    roomAreaSqFt: roomArea,
+    tileLength,
+    tileWidth,
+    tileAreaSqFt: tileArea,
+    baseTiles,
+    wastagePercent: wastage,
+    extraTiles,
+    totalTiles
+  };
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
 }
 
 
